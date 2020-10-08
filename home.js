@@ -1,5 +1,3 @@
-// API Reference: https://www.wix.com/corvid/reference
-// “Hello, World!” Example: https://www.wix.com/corvid/hello-world
 import wixWindow from 'wix-window';
 
 const blank = "wix:image://v1/d6156e_eba70008c6644419841efd207bf478eb~mv2.png/_.png#originWidth=230&originHeight=219";
