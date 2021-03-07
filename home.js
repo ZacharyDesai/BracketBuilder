@@ -19,10 +19,13 @@ let regionCTeams = {};
 let regionDTeams = {};
 
 $w.onReady(function () {
-	$w("#dataset").getItems(0, 68).then( (result) => {
-		teams = result.items;
-		for (let team of teams) {
-			teamsMap[team.school] = team;
+	$w("#dataset").getItems(0, 357).then( (result) => {
+		const teamData = result.items;
+		for (let team of teamData) {
+			if (team.seed !== undefined) {
+				teams.push(team);
+				teamsMap[team.school] = team;
+			}			
 		}
 		loadTeams();
 		$w("#clearbutton").enable();
@@ -2126,7 +2129,7 @@ function openLightbox(team1Obj, team2Obj, lightbox) {
 		team1: team1Obj,
 		team2: team2Obj
 	};
-	wixWindow.openLightbox(lightbox, data);
+	wixWindow.openLightbox("Matchup", data);
 }
 
 function loadTeams() {
@@ -2539,9 +2542,9 @@ async function autofillFinalFour() {
 }
 
 function simGame(team1, team2) {
-	let diffNet = team1.netRank - team2.netRank;
-	let diffKp = team1.kenPomOverallRank - team2.kenPomOverallRank;
-	let diffFf = team1.fourFactorsOverallRank - team2.fourFactorsOverallRank;
+	let diffNet = team1.net - team2.net;
+	let diffKp = team1.kp - team2.kp;
+	let diffFf = team1.f - team2.f;
 	let diff = (diffNet + diffKp + diffFf) / 4;
 	let team1Chance;
 	if (diff < 0) {
