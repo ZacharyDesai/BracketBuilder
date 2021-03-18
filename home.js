@@ -12,6 +12,8 @@ const finalSeedsOther = [6, 5];
 
 let teams = [];
 let teamsMap = {};
+let teamSelections = {};
+let schools = [];
 let firstFourTeams = {};
 let regionATeams = {};
 let regionBTeams = {};
@@ -25,6 +27,8 @@ $w.onReady(function () {
 			if (team.seed !== undefined) {
 				teams.push(team);
 				teamsMap[team.school] = team;
+				schools.push(team.school);
+				teamSelections[team.school] = [];
 			}			
 		}
 		loadTeams();
@@ -2210,12 +2214,12 @@ function placeTeamsFirstFour() {
 		$w(`#firstfourseed${idx}`).label = `#${seedNumber}`;
 		$w(`#firstfourlogo${idx}`).src = team1.logo;
 		$w(`#firstfourschool${idx}`).label = team1.school;
-		$w(`#firstfourpick${idx}`).onClick(function(){firstFourOnClick(firstFourPick1, firstFourPick2, region, seedNumber, team1)});
+		$w(`#firstfourpick${idx}`).onClick(function(){firstFourOnClick(firstFourPick1, firstFourPick2, region, seedNumber, team1, team2)});
 		idx++;
 		$w(`#firstfourseed${idx}`).label = `#${seedNumber}`;
 		$w(`#firstfourlogo${idx}`).src = team2.logo;
 		$w(`#firstfourschool${idx}`).label = team2.school;
-		$w(`#firstfourpick${idx}`).onClick(function(){firstFourOnClick(firstFourPick1, firstFourPick2, region, seedNumber, team2)});
+		$w(`#firstfourpick${idx}`).onClick(function(){firstFourOnClick(firstFourPick2, firstFourPick1, region, seedNumber, team2, team1)});
 		idx++;
 	}
 }
@@ -2247,12 +2251,12 @@ function placeTeamsRegion(region) {
 		let pick2 = $w(`#region${region}pick${seed2}`);	
 		$w(`#region${region}logo${seed1}`).src = team1.logo;
 		$w(`#region${region}school${seed1}`).label = team1.school;
-		$w(`#region${region}pick${seed1}`).onClick(function(){regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1)});
+		$w(`#region${region}pick${seed1}`).onClick(function(){regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1, seed2)});
 		if (team2 !== null) {
 			$w(`#region${region}logo${seed2}`).src = team2.logo;
 			$w(`#region${region}school${seed2}`).label = team2.school;
 		}
-		$w(`#region${region}pick${seed2}`).onClick(function(){regionOnClick(pick1, pick2, region, seed3, seed3Other, seed2)});
+		$w(`#region${region}pick${seed2}`).onClick(function(){regionOnClick(pick2, pick1, region, seed3, seed3Other, seed2, seed1)});
 	}
 	for (let seedNumber = 17; seedNumber <= 24; seedNumber += 2) {
 		let seed1 = seedNumber;
@@ -2261,8 +2265,8 @@ function placeTeamsRegion(region) {
 		let seed3Other = roundSeeds2Other[(seedNumber + 1) / 2 - 9];
 		let pick1 = $w(`#region${region}pick${seed1}`);
 		let pick2 = $w(`#region${region}pick${seed2}`);
-		$w(`#region${region}pick${seed1}`).onClick(function(){regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1)});
-		$w(`#region${region}pick${seed2}`).onClick(function(){regionOnClick(pick1, pick2, region, seed3, seed3Other, seed2)});
+		$w(`#region${region}pick${seed1}`).onClick(function(){regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1, seed2)});
+		$w(`#region${region}pick${seed2}`).onClick(function(){regionOnClick(pick2, pick1, region, seed3, seed3Other, seed2, seed1)});
 	}
 	for (let seedNumber = 25; seedNumber <= 28; seedNumber += 2) {
 		let seed1 = seedNumber;
@@ -2271,8 +2275,8 @@ function placeTeamsRegion(region) {
 		let seed3Other = roundSeeds3Other[(seedNumber + 1) / 2 - 13];
 		let pick1 = $w(`#region${region}pick${seed1}`);
 		let pick2 = $w(`#region${region}pick${seed2}`);	
-		$w(`#region${region}pick${seed1}`).onClick(function(){regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1)});
-		$w(`#region${region}pick${seed2}`).onClick(function(){regionOnClick(pick1, pick2, region, seed3, seed3Other, seed2)});
+		$w(`#region${region}pick${seed1}`).onClick(function(){regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1, seed2)});
+		$w(`#region${region}pick${seed2}`).onClick(function(){regionOnClick(pick2, pick1, region, seed3, seed3Other, seed2, seed1)});
 	}
 	let regionNumber;
 	let otherRegionNumber;
@@ -2299,7 +2303,7 @@ function placeTeamsRegion(region) {
 	let pick1 = $w(`#region${region}pick${seed1}`);
 	let pick2 = $w(`#region${region}pick${seed2}`);
 	$w(`#region${region}pick${seed1}`).onClick(function(){regionFinalOnClick(pick1, pick2, region, regionNumber, otherRegionNumber, seed1)});
-	$w(`#region${region}pick${seed2}`).onClick(function(){regionFinalOnClick(pick1, pick2, region, regionNumber, otherRegionNumber, seed2)});
+	$w(`#region${region}pick${seed2}`).onClick(function(){regionFinalOnClick(pick2, pick1, region, regionNumber, otherRegionNumber, seed2)});
 }
 
 function placeTeamsFinalFour() {
@@ -2311,7 +2315,7 @@ function placeTeamsFinalFour() {
 		let pick1 = $w(`#finalfourpick${seed1}`);
 		let pick2 = $w(`#finalfourpick${seed2}`);	
 		$w(`#finalfourpick${seed1}`).onClick(function(){finalFourOnClick(pick1, pick2, seed3, seed3Other, seed1)});
-		$w(`#finalfourpick${seed2}`).onClick(function(){finalFourOnClick(pick1, pick2, seed3, seed3Other, seed2)});
+		$w(`#finalfourpick${seed2}`).onClick(function(){finalFourOnClick(pick2, pick1, seed3, seed3Other, seed2)});
 	}
 	for (let seedNumber = 5; seedNumber <= 6; seedNumber += 2) {
 		let seed1 = seedNumber;
@@ -2320,7 +2324,7 @@ function placeTeamsFinalFour() {
 		let pick1 = $w(`#finalfourpick${seed1}`);
 		let pick2 = $w(`#finalfourpick${seed2}`);	
 		$w(`#finalfourpick${seed1}`).onClick(function(){championshipOnClick(pick1, pick2, seed3, seed1)});
-		$w(`#finalfourpick${seed2}`).onClick(function(){championshipOnClick(pick1, pick2, seed3, seed2)});
+		$w(`#finalfourpick${seed2}`).onClick(function(){championshipOnClick(pick2, pick1, seed3, seed2)});
 	}
 }
 
@@ -2332,6 +2336,9 @@ function clear() {
 	clearRegion('d');
 	clearRegionFix();
 	clearFinalFour();
+	for (let school of schools) {
+		teamSelections[school] = [];
+	}
 }
 
 function clearFirstFour() {
@@ -2397,10 +2404,10 @@ async function autofillFirstFour() {
 			let seedNumber = seed.substring(0, seed.length - 1);
 			let region = seed.charAt(seed.length - 1).toLowerCase();
 			if (winner) {
-				firstFourOnClick(firstFourPick1, firstFourPick2, region, seedNumber, team1);
+				firstFourOnClick(firstFourPick1, firstFourPick2, region, seedNumber, team1, team2);
 			}
 			else {
-				firstFourOnClick(firstFourPick1, firstFourPick2, region, seedNumber, team2);
+				firstFourOnClick(firstFourPick2, firstFourPick1, region, seedNumber, team2, team1);
 			}
 		}
 	}
@@ -2419,10 +2426,10 @@ async function autofillRegion(region) {
 			let pick1 = $w(`#region${region}pick${seed1}`);
 			let pick2 = $w(`#region${region}pick${seed2}`);
 			if (winner) {
-				regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1);
+				regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1, seed2);
 			}
 			else {
-				regionOnClick(pick1, pick2, region, seed3, seed3Other, seed2);
+				regionOnClick(pick2, pick1, region, seed3, seed3Other, seed2, seed1);
 			}
 		}
 	}
@@ -2438,10 +2445,10 @@ async function autofillRegion(region) {
 			let pick1 = $w(`#region${region}pick${seed1}`);
 			let pick2 = $w(`#region${region}pick${seed2}`);
 			if (winner) {
-				regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1);
+				regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1, seed2);
 			}
 			else {
-				regionOnClick(pick1, pick2, region, seed3, seed3Other, seed2);
+				regionOnClick(pick2, pick1, region, seed3, seed3Other, seed2, seed1);
 			}
 		}
 	}
@@ -2455,12 +2462,12 @@ async function autofillRegion(region) {
 			let seed3 = roundSeeds3[(i + 1) / 2 - 13];
 			let seed3Other = roundSeeds3Other[(i + 1) / 2 - 13];
 			let pick1 = $w(`#region${region}pick${seed1}`);
-			let pick2 = $w(`#region${region}pick${seed2}`);	
+			let pick2 = $w(`#region${region}pick${seed2}`);
 			if (winner) {
-				regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1);
+				regionOnClick(pick1, pick2, region, seed3, seed3Other, seed1, seed2);
 			}
 			else {
-				regionOnClick(pick1, pick2, region, seed3, seed3Other, seed2);
+				regionOnClick(pick2, pick1, region, seed3, seed3Other, seed2, seed1);
 			}
 		}
 	}
@@ -2496,7 +2503,7 @@ async function autofillRegion(region) {
 			regionFinalOnClick(pick1, pick2, region, regionNumber, otherRegionNumber, seed1);
 		}
 		else {
-			regionFinalOnClick(pick1, pick2, region, regionNumber, otherRegionNumber, seed2);
+			regionFinalOnClick(pick2, pick1, region, regionNumber, otherRegionNumber, seed2);
 		}
 	}
 }
@@ -2517,7 +2524,7 @@ async function autofillFinalFour() {
 				finalFourOnClick(pick1, pick2, seed3, seed3Other, seed1);
 			}
 			else {
-				finalFourOnClick(pick1, pick2, seed3, seed3Other, seed2);
+				finalFourOnClick(pick2, pick1, seed3, seed3Other, seed2);
 			}
 		}
 	}
@@ -2535,7 +2542,7 @@ async function autofillFinalFour() {
 				championshipOnClick(pick1, pick2, seed3, seed1);
 			}
 			else {
-				championshipOnClick(pick1, pick2, seed3, seed2);
+				championshipOnClick(pick2, pick1, seed3, seed2);
 			}
 		}
 	}
@@ -2562,53 +2569,170 @@ function simGame(team1, team2) {
 	return random < team1Chance;
 }
 
-export function firstFourOnClick(firstFourPick1, firstFourPick2, region, seedNumber, team) {
-	firstFourPick1.disable();
-	firstFourPick2.disable();
+export function firstFourOnClick(pick, otherPick, region, seedNumber, team, otherTeam) {
+	pick.disable();
+	const otherTeamSchool = otherTeam.school;
+	let otherTeamSelections = teamSelections[otherTeamSchool];
+	for (let selection of otherTeamSelections) {
+		if (selection[0] === "finalfour") {
+			$w(`#finalfourseed${selection[1]}`).label = "";
+			$w(`#finalfourlogo${selection[1]}`).src = blank;
+			$w(`#finalfourschool${selection[1]}`).label = "";
+			if (selection[1] < 7) {
+				$w(`#finalfourpick${selection[1]}`).disable();
+			}
+		}
+		else {
+			if (selection[1] > 16) {
+				$w(`#region${selection[0]}seed${selection[1]}`).label = "";
+				$w(`#region${selection[0]}pick${selection[1]}`).disable();
+			}
+			$w(`#region${selection[0]}logo${selection[1]}`).src = blank;
+			$w(`#region${selection[0]}school${selection[1]}`).label = "";
+		}
+	}
+	teamSelections[otherTeamSchool] = [];
 	$w(`#region${region}logo${seedNumber}`).src = team.logo;
 	$w(`#region${region}school${seedNumber}`).label = team.school;
-	if ($w(`#region${region}school${17 - seedNumber}`).label === "" || $w(`#region${region}pick${17 - seedNumber}`).enabled) {
-		$w(`#region${region}pick${seedNumber}`).enable();
-	}
+	$w(`#region${region}pick${seedNumber}`).enable();
+	teamSelections[team.school].push([region, seedNumber]);
+	otherPick.enable();
 }
 
-export function regionOnClick(pick1, pick2, region, seed3, seed3Other, seed) {
-	pick1.disable();
-	pick2.disable();
+export function regionOnClick(pick, otherPick, region, seed3, seed3Other, seed, otherTeamSeed) {
+	pick.disable();
+	const otherTeamSchool = $w(`#region${region}school${otherTeamSeed}`).label;
+	if (otherTeamSchool !== "") {
+		let otherTeamSelections = teamSelections[otherTeamSchool];
+		let newSelections = [];
+		for (let selection of otherTeamSelections) {
+			if (selection[0] === "finalfour") {
+				$w(`#finalfourseed${selection[1]}`).label = "";
+				$w(`#finalfourlogo${selection[1]}`).src = blank;
+				$w(`#finalfourschool${selection[1]}`).label = "";
+				if (selection[1] < 7) {
+					$w(`#finalfourpick${selection[1]}`).disable();
+				}
+			}
+			else if (selection[1] > Math.max(seed, otherTeamSeed)) {
+				$w(`#region${selection[0]}seed${selection[1]}`).label = "";
+				$w(`#region${selection[0]}logo${selection[1]}`).src = blank;
+				$w(`#region${selection[0]}school${selection[1]}`).label = "";
+				if (selection[1] > seed3) {
+					$w(`#region${selection[0]}pick${selection[1]}`).disable();
+				}
+			}
+			else {
+				newSelections.push(selection);
+			}
+		}
+		teamSelections[otherTeamSchool] = newSelections;
+	}
 	$w(`#region${region}seed${seed3}`).label = $w(`#region${region}seed${seed}`).label;
 	$w(`#region${region}logo${seed3}`).src = $w(`#region${region}logo${seed}`).src;
 	$w(`#region${region}school${seed3}`).label = $w(`#region${region}school${seed}`).label;
-	if ($w(`#region${region}school${seed3Other}`).label === "" || $w(`#region${region}pick${seed3Other}`).enabled) {
-		$w(`#region${region}pick${seed3}`).enable();
+	$w(`#region${region}pick${seed3}`).enable();
+	const teamSchool = $w(`#region${region}school${seed}`).label;
+	teamSelections[teamSchool].push([region, seed3]);
+	if ($w(`#region${region}school${otherTeamSeed}`).label !== "") {
+		otherPick.enable();
 	}
 }
 
-export function regionFinalOnClick(pick1, pick2, region, regionNumber, otherRegionNumber, seed) {
-	pick1.disable();
-	pick2.disable();
+export function regionFinalOnClick(pick, otherPick, region, regionNumber, otherRegionNumber, seed) {
+	pick.disable();
+	const otherTeamSeed = seed % 2 === 0 ? seed - 1 : seed + 1;
+	const otherTeamSchool = $w(`#region${region}school${otherTeamSeed}`).label;
+	if (otherTeamSchool !== "") {
+		let otherTeamSelections = teamSelections[otherTeamSchool];
+		let newSelections = [];
+		for (let selection of otherTeamSelections) {
+			if (selection[0] === "finalfour") {
+				$w(`#finalfourseed${selection[1]}`).label = "";
+				$w(`#finalfourlogo${selection[1]}`).src = blank;
+				$w(`#finalfourschool${selection[1]}`).label = "";
+				if (selection[1] < 7) {
+					$w(`#finalfourpick${selection[1]}`).disable();
+				}
+			}
+			else {
+				newSelections.push(selection);
+			}
+		}
+		teamSelections[otherTeamSchool] = newSelections;
+	}
 	$w(`#finalfourseed${regionNumber}`).label = $w(`#region${region}seed${seed}`).label;
 	$w(`#finalfourlogo${regionNumber}`).src = $w(`#region${region}logo${seed}`).src;
 	$w(`#finalfourschool${regionNumber}`).label = $w(`#region${region}school${seed}`).label;
-	if ($w(`#finalfourschool${otherRegionNumber}`).label === "" || $w(`#finalfourpick${otherRegionNumber}`).enabled) {
-		$w(`#finalfourpick${regionNumber}`).enable();
+	$w(`#finalfourpick${regionNumber}`).enable();
+	const teamSchool = $w(`#region${region}school${seed}`).label;
+	teamSelections[teamSchool].push(["finalfour", regionNumber]);
+	if ($w(`#region${region}school${otherTeamSeed}`).label !== "") {
+		otherPick.enable();
 	}
 }
 
-export function finalFourOnClick(pick1, pick2, seed3, seed3Other, seed) {
-	pick1.disable();
-	pick2.disable();
+export function finalFourOnClick(pick, otherPick, seed3, seed3Other, seed) {
+	pick.disable();
+	const otherTeamSeed = seed % 2 === 0 ? seed - 1 : seed + 1;
+	const otherTeamSchool = $w(`#finalfourschool${otherTeamSeed}`).label;
+	if (otherTeamSchool !== "") {
+		let otherTeamSelections = teamSelections[otherTeamSchool];
+		let newSelections = [];
+		for (let selection of otherTeamSelections) {
+			if (selection[0] === "finalfour" && selection[1] > Math.max(seed, otherTeamSeed)) {
+				$w(`#finalfourseed${selection[1]}`).label = "";
+				$w(`#finalfourlogo${selection[1]}`).src = blank;
+				$w(`#finalfourschool${selection[1]}`).label = "";
+				if (selection[1] < 7) {
+					$w(`#finalfourpick${selection[1]}`).disable();
+				}
+			}
+			else {
+				newSelections.push(selection);
+			}
+		}
+		teamSelections[otherTeamSchool] = newSelections;
+	}
 	$w(`#finalfourseed${seed3}`).label = $w(`#finalfourseed${seed}`).label;
 	$w(`#finalfourlogo${seed3}`).src = $w(`#finalfourlogo${seed}`).src;
 	$w(`#finalfourschool${seed3}`).label = $w(`#finalfourschool${seed}`).label;
-	if ($w(`#finalfourschool${seed3Other}`).label === "" || $w(`#finalfourpick${seed3Other}`).enabled) {
-		$w(`#finalfourpick${seed3}`).enable();
+	$w(`#finalfourpick${seed3}`).enable();
+	const teamSchool = $w(`#finalfourschool${seed}`).label;
+	teamSelections[teamSchool].push(["finalfour", seed3]);
+	if ($w(`#finalfourschool${otherTeamSeed}`).label !== "") {
+		otherPick.enable();
 	}
 }
 
-export function championshipOnClick(pick1, pick2, seed3, seed) {
-	pick1.disable();
-	pick2.disable();
+export function championshipOnClick(pick, otherPick, seed3, seed) {
+	pick.disable();
+	const otherTeamSeed = seed % 2 === 0 ? seed - 1 : seed + 1;
+	const otherTeamSchool = $w(`#finalfourschool${otherTeamSeed}`).label;
+	if (otherTeamSchool !== "") {
+		let otherTeamSelections = teamSelections[otherTeamSchool];
+		let newSelections = [];
+		for (let selection of otherTeamSelections) {
+			if (selection[0] === "finalfour" && selection[1] > Math.max(seed, otherTeamSeed)) {
+				$w(`#finalfourseed${selection[1]}`).label = "";
+				$w(`#finalfourlogo${selection[1]}`).src = blank;
+				$w(`#finalfourschool${selection[1]}`).label = "";
+				if (selection[1] < 7) {
+					$w(`#finalfourpick${selection[1]}`).disable();
+				}
+			}
+			else {
+				newSelections.push(selection);
+			}
+		}
+		teamSelections[otherTeamSchool] = newSelections;
+	}
 	$w(`#finalfourseed${seed3}`).label = $w(`#finalfourseed${seed}`).label;
 	$w(`#finalfourlogo${seed3}`).src = $w(`#finalfourlogo${seed}`).src;
 	$w(`#finalfourschool${seed3}`).label = $w(`#finalfourschool${seed}`).label;
+	const teamSchool = $w(`#finalfourschool${seed}`).label;
+	teamSelections[teamSchool].push(["finalfour", seed3]);
+	if ($w(`#finalfourschool${otherTeamSeed}`).label !== "") {
+		otherPick.enable();
+	}
 }
